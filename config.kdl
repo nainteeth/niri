@@ -1,0 +1,193 @@
+// Core system packages (dnf):
+//   - niri waybar rofi kitty nautilus
+//   - waypaper xwayland-satellite
+// Flatpak applications:
+//   - app.zen_browser.zen
+//   - io.missioncenter.MissionCenter
+
+environment {
+  DISPLAY ":0"
+  QT_STYLE_OVERRIDE "adwaita-dark"
+  MOZ_ENABLE_WAYLAND "1"
+}
+
+
+output "DP-1" {
+  mode "3840x2560@60"
+  transform "normal"
+  position x=-1920 y=0
+  scale 2
+}
+output "DP-2" {
+  mode "1920x1080@240"
+  transform "normal"
+  position x=0 y=0
+  scale 1
+}
+
+
+input {
+  tablet {
+    off
+    map-to-output "DP-1"
+  }
+  keyboard {
+    xkb {
+      layout "de"
+    }
+  }
+  mouse {
+    accel-profile "flat"
+  }
+  focus-follows-mouse max-scroll-amount="0%"
+}
+
+
+layout {
+  gaps 8
+  center-focused-column "never"
+  preset-column-widths {
+    proportion 0.33333
+    proportion 0.5
+    proportion 0.66667
+  }
+  default-column-width { proportion 0.5; }
+  focus-ring {
+    width 3
+    active-color "#CBA6F740"
+    inactive-color "#45475A20"
+  }
+  border {
+    off
+  }
+  shadow {
+    on
+    draw-behind-window true
+    softness 30
+    spread 5
+    offset x=0 y=5
+    color "#0007"
+  }
+}
+
+animations {
+  slowdown 1.5
+}
+
+prefer-no-csd
+
+window-rule {
+  open-maximized true
+  geometry-corner-radius 12
+  clip-to-geometry true
+  opacity 0.8
+  background-effect {
+    blur true
+  }
+}
+window-rule {
+  match app-id="pavucontrol"
+  open-floating true
+  opacity 0.95
+}
+window-rule {
+  match app-id="kitty"
+  match app-id="thunar"
+  open-maximized false
+}
+window-rule {
+  match app-id="kitty"
+  opacity 0.7
+}
+window-rule {
+  match app-id="firefox"
+  opacity 0.999999
+}
+
+
+binds {
+  // System
+  Super+Shift+W { show-hotkey-overlay; }
+  Super+O repeat=false { toggle-overview; }
+  Super+Q { close-window; }
+  Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+  Mod+Shift+E { quit; }
+  Ctrl+Alt+Delete { quit; }
+  Mod+Shift+P { power-off-monitors; }
+  // Navigation
+  Mod+H     { focus-column-left; }
+  Mod+L     { focus-column-right; }
+  Mod+J     { focus-window-or-workspace-down; }
+  Mod+K     { focus-window-or-workspace-up; }
+  // Window Movement
+  Mod+Shift+H     { move-column-left; }
+  Mod+Shift+L     { move-column-right; }
+  Mod+Shift+J     { move-window-down-or-to-workspace-down; }
+  Mod+Shift+K     { move-window-up-or-to-workspace-up; }
+  // Monitor Controls
+  Mod+Ctrl+H     { focus-monitor-left; }
+  Mod+Ctrl+J     { focus-monitor-down; }
+  Mod+Ctrl+K     { focus-monitor-up; }
+  Mod+Ctrl+L     { focus-monitor-right; }
+  Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
+  Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
+  Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
+  Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
+  // Workspaces
+  Mod+U              { focus-workspace-down; }
+  Mod+I              { focus-workspace-up; }
+  Mod+Ctrl+U         { move-column-to-workspace-down; }
+  Mod+Ctrl+I         { move-column-to-workspace-up; }
+  Mod+Shift+U         { move-workspace-down; }
+  Mod+Shift+I         { move-workspace-up; }
+  // Mouse Wheel
+  Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
+  Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
+  Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
+  Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
+  Mod+WheelScrollRight      { focus-column-right; }
+  Mod+WheelScrollLeft       { focus-column-left; }
+  Mod+Ctrl+WheelScrollRight { move-column-right; }
+  Mod+Ctrl+WheelScrollLeft  { move-column-left; }
+  Mod+Shift+WheelScrollDown      { focus-column-right; }
+  Mod+Shift+WheelScrollUp        { focus-column-left; }
+  Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
+  Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
+  // Window Layout
+  Mod+F { maximize-column; }
+  Mod+SHIFT+F { fullscreen-window; }
+  Mod+V       { toggle-window-floating; }
+  Mod+W { toggle-column-tabbed-display; }
+  // Applications
+  Mod+Return repeat=false hotkey-overlay-title="Terminal" {
+    spawn "kitty";
+  }
+  Mod+B repeat=false hotkey-overlay-title="Browser" {
+    spawn "librewolf";
+  }
+  Mod+E repeat=false hotkey-overlay-title="File Manager" {
+    spawn "thunar";
+  }
+  Mod+Space hotkey-overlay-title="App Launcher" {
+    spawn "wofi" "--show" "drun";
+  }
+  // Screenshot
+  Print { screenshot; }
+  Mod+S { screenshot-screen; }
+  Mod+Shift+S { screenshot-window; }
+}
+
+spawn-at-startup "waybar"
+spawn-at-startup "waypaper" "--restore"
+spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP" "XDG_SESSION_TYPE"
+spawn-at-startup "xfce-polkit"
+
+// Screenshots
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+// Misc
+hotkey-overlay {
+  skip-at-startup
+}
+
+include "/home/nainteeth/.config/quickshell/integration/niri.kdl"
