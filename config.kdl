@@ -1,3 +1,10 @@
+// Core system packages (dnf):
+//   - niri waybar rofi kitty nautilus
+//   - waypaper xwayland-satellite
+// Flatpak applications:
+//   - app.zen_browser.zen
+//   - io.missioncenter.MissionCenter
+
 environment {
   DISPLAY ":0"
   QT_STYLE_OVERRIDE "adwaita-dark"
@@ -37,7 +44,7 @@ input {
 
 
 layout {
-  gaps 4
+  gaps 8
   center-focused-column "never"
   preset-column-widths {
     proportion 0.33333
@@ -46,7 +53,7 @@ layout {
   }
   default-column-width { proportion 0.5; }
   focus-ring {
-    width 1
+    width 3
     active-color "#CBA6F740"
     inactive-color "#45475A20"
   }
@@ -54,7 +61,7 @@ layout {
     off
   }
   shadow {
-    off
+    on
     draw-behind-window true
     softness 30
     spread 5
@@ -73,28 +80,29 @@ window-rule {
   open-maximized true
   geometry-corner-radius 12
   clip-to-geometry true
-  // background-effect {
-  //   blur true
-  // }
+  opacity 0.8
+  background-effect {
+    blur true
+  }
 }
-// window-rule {
-//   match app-id="pavucontrol"
-//   open-floating true
-//   opacity 0.95
-// }
+window-rule {
+  match app-id="pavucontrol"
+  open-floating true
+  opacity 0.95
+}
 window-rule {
   match app-id="kitty"
   match app-id="thunar"
   open-maximized false
 }
-// window-rule {
-//   match app-id="kitty"
-//   opacity 0.7
-// }
-// window-rule {
-//   match app-id="firefox"
-//   opacity 0.999999
-// }
+window-rule {
+  match app-id="kitty"
+  opacity 0.7
+}
+window-rule {
+  match app-id="firefox"
+  opacity 0.999999
+}
 
 
 binds {
@@ -152,7 +160,7 @@ binds {
   Mod+W { toggle-column-tabbed-display; }
   // Applications
   Mod+Return repeat=false hotkey-overlay-title="Terminal" {
-    spawn "ghostty";
+    spawn "kitty";
   }
   Mod+B repeat=false hotkey-overlay-title="Browser" {
     spawn "librewolf";
@@ -170,7 +178,6 @@ binds {
 }
 
 spawn-at-startup "waybar"
-spawn-at-startup "nm-applet"
 spawn-at-startup "waypaper" "--restore"
 spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP" "XDG_SESSION_TYPE"
 spawn-at-startup "xfce-polkit"
@@ -182,3 +189,5 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 hotkey-overlay {
   skip-at-startup
 }
+
+include "/home/nainteeth/.config/quickshell/integration/niri.kdl"
