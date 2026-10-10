@@ -1,9 +1,5 @@
 // Core system packages (dnf):
-//   - niri waybar rofi kitty nautilus
-//   - waypaper xwayland-satellite
-// Flatpak applications:
-//   - app.zen_browser.zen
-//   - io.missioncenter.MissionCenter
+//   - niri waybar rofi ghostty thunar waypaper
 
 environment {
   DISPLAY ":0"
